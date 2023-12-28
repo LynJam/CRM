@@ -1,0 +1,30 @@
+server:
+  port: 18000
+
+spring:
+  application:
+    name: gateway-crm
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.124.150:8848
+        group: DEVELOP_GROUP
+        namespace: db78713f-1844-4ba9-ae48-bc1a726dd2d9
+      config:
+        server-addr: 192.168.124.150:8848
+        group: DEVELOP_GROUP
+        namespace: db78713f-1844-4ba9-ae48-bc1a726dd2d9
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: router-user-crm
+          uri: lb://user-crm
+          predicates:
+            - Path=/user/**,/account/**
+  config:
+    import:
+      - optional:nacos:gateway.yml?group=DEVELOP_GROUP&refreshEnabled=true
+
