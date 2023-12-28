@@ -10,7 +10,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-@MapperScan
 public class IMApplication {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;

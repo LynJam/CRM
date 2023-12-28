@@ -1,4 +1,4 @@
-package cn.edu.scnu;
+package cn.edu.scnu.ws;
 
 import lombok.Builder;
 import lombok.Data;
