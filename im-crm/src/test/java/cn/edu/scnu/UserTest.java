@@ -1,9 +1,15 @@
-package cn.edu.scnu.util;
+package cn.edu.scnu;
 
+import cn.edu.scnu.enums.ProtocolTypeEnum;
 import cn.edu.scnu.pojo.Room;
 import cn.edu.scnu.pojo.User;
+import cn.edu.scnu.pojo.User.UserBuilder;
 import cn.edu.scnu.service.RoomService;
 import cn.edu.scnu.service.UserService;
+import cn.edu.scnu.util.JsonUtil;
+import cn.edu.scnu.vo.RoomVo;
+import cn.edu.scnu.ws.WsProtocol;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,9 +28,14 @@ public class UserTest {
 
     @Test
     public void addTestUser() {
-        getUsers().stream().forEach(u -> {
-            userService.addNewUser(u);
-        });
+        //getUsers().stream().forEach(u -> {
+        //    userService.addNewUser(u);
+        //});
+        User system = User.builder()
+            .username("SYSTEM")
+            .userId("000000")
+            .build();
+        userService.addNewUser(system);
     }
     @Test
     public void addTestRoom() {
@@ -64,6 +75,26 @@ public class UserTest {
             .build();
 
         return Lists.newArrayList(jam, tom, mary);
+    }
+
+    @Test
+    public void testGetRooms() {
+        List<User> users = getUsers();
+        List<RoomVo> roomsWithUserId = roomService.findRoomsWithUserId(users.get(0)
+            .getUserId());
+        String jsonStr = JsonUtil.toJson(roomsWithUserId);
+        System.out.println(jsonStr );
+    }
+
+    @Test
+    public void testEncode() {
+
+        List<RoomVo> data = roomService.findRoomsWithUserId("123456");
+        WsProtocol<List<RoomVo>> wsProtocol = WsProtocol.of(ProtocolTypeEnum.GET_ROOMS.type, data);
+        String json = JsonUtil.toJson(wsProtocol);
+
+        WsProtocol deData = JsonUtil.toObject(json, WsProtocol.class);
+
     }
 
 

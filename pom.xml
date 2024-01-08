@@ -33,7 +33,7 @@
     <jwt.version>0.9.1</jwt.version>
     <javafaker.version>1.0.2</javafaker.version>
     <spring-boot-plugin.version>2.6.13</spring-boot-plugin.version>
-
+    <caffeine.version>2.9.3</caffeine.version>
   </properties>
 
   <dependencyManagement>

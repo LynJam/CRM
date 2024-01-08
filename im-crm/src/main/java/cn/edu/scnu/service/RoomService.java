@@ -10,4 +10,6 @@ public interface RoomService {
     public List<RoomVo> findRoomsWithUser(List<String> roomIds, String userId);
 
     public Room addNewRoom(Room room);
+
+    public Room findRoomByRoomId(String roomId);
 }

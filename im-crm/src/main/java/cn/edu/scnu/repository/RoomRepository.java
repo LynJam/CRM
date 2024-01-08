@@ -36,4 +36,10 @@ public class RoomRepository {
         }
         mongoTemplate.updateFirst(query, update, Room.class);
     }
+
+    public Room findOne(String roomId) {
+        Query query = Query.query(Criteria.where("roomId")
+                .is(roomId));
+        return mongoTemplate.findOne(query, Room.class);
+    }
 }

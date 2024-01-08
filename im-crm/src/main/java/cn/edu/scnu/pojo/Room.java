@@ -22,4 +22,11 @@ public class Room {
     public boolean isSingleChat() {
         return userIds.size() == 2;
     }
+
+    public String oppositeUserId(String selfUserId) {
+        if(isSingleChat()) {
+            return userIds.get(0).equals(selfUserId) ? userIds.get(1) : userIds.get(0);
+        }
+        return "";
+    }
 }

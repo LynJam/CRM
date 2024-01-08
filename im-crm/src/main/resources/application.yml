@@ -30,12 +30,13 @@ spring:
     password: redis@scnu
   data:
     mongodb:
-      host: 192.168.124.150
-      port: 27017
-      database: im
-      username: admin
-      password: admin
-      authentication-database: admin
+      uri: mongodb://admin:admin@192.168.124.150:27017/im?authSource=admin
+#      host: 192.168.124.150
+#      port: 27017
+#      database: im
+#      username: admin
+#      password: admin
+#      authentication-database: admin
 
 #management:
 #  endpoints:

@@ -1,5 +1,8 @@
 package cn.edu.scnu.pojo;
 
+import lombok.Builder;
+import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -7,8 +10,19 @@ import org.springframework.data.annotation.Id;
  * TLU+userId
  * TLR+roomId
  */
+@Data
+@Builder
 public class Timeline {
     @Id
-    private String id; // ID 带有时间性质，用户级递增
+    private ObjectId id; // ID 带有时间性质，用户级递增
     private String messageId;
+
+
+    public static Timeline of(String messageId) {
+        return Timeline.builder()
+            .messageId(messageId)
+            .build();
+    }
+
+
 }

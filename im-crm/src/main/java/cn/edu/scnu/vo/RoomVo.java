@@ -2,6 +2,7 @@ package cn.edu.scnu.vo;
 
 import cn.edu.scnu.pojo.Room;
 import cn.edu.scnu.pojo.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class RoomVo {
     private String avatar;
     private List<User> users;
 
+    @JsonIgnore
     public boolean isSingleChat() {
         return users.size() == 2;
     }
@@ -23,7 +25,7 @@ public class RoomVo {
         if(!isSingleChat() ) {
             return;
         }
-        User target = userId.equals(users.get(0).getUserId()) ? users.get(0) : users.get(1);
+        User target = userId.equals(users.get(0).getUserId()) ? users.get(1) : users.get(0);
         setRoomName(target.getUsername());
         setAvatar(target.getAvatar());
     }

@@ -13,10 +13,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class RoomServiceImpl implements RoomService {
     @Autowired
     private RoomRepository roomRepository;
@@ -25,7 +27,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomVo> findRoomsWithUserId(String userId) {
+        log.info("userId: {}", userId);
         User user = userRepository.findUserByUserId(userId);
+       log.info("user: {}", user);
         return findRoomsWithUser(user.getRoomIds(), user.getUserId());
     }
 
@@ -61,5 +65,10 @@ public class RoomServiceImpl implements RoomService {
         List<String> userIds = r.getUserIds();
         userRepository.addRoomIdsToUsers(userIds, Lists.newArrayList(roomId));
         return r;
+    }
+
+    @Override
+    public Room findRoomByRoomId(String roomId) {
+        return roomRepository.findOne(roomId);
     }
 }
