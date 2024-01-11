@@ -9,6 +9,8 @@ import cn.edu.scnu.util.TokenUtil;
 import cn.edu.scnu.vo.RefreshTokenVo;
 import cn.edu.scnu.vo.UserInfoVo;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -19,6 +21,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Override
+    public List<UserEntity> findUsersByIds(List<String> userIds) {
+        if(userIds == null || userIds.isEmpty()){
+            return Lists.newArrayList();
+        }
+        return listByIds(userIds);
+    }
     @Override
     public UserInfoVo saveUserToken(UserEntity user) {
         String token = TokenUtil.generateToken(user.getUserId());
@@ -52,4 +61,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
         user.setPassword(encryptionPsd);
         return save(user);
     }
+
+
 }

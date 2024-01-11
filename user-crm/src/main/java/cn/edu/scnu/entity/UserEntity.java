@@ -1,5 +1,6 @@
 package cn.edu.scnu.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
@@ -8,11 +9,13 @@ import lombok.Data;
 @Builder
 @TableName("user")
 public class UserEntity {
+    @TableId
     private String userId;
     private String username;
-    private String password;
-    private String image;
     private Boolean gender;
+    private String phone;
+    private String image;
     private String description;
+    private String password;
 }
 

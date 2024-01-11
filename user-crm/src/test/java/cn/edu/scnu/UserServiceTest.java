@@ -3,6 +3,7 @@ package cn.edu.scnu;
 import cn.edu.scnu.entity.UserEntity;
 import cn.edu.scnu.service.UserService;
 import java.util.List;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,5 +39,12 @@ public class UserServiceTest {
     public void getUser() {
         List<UserEntity> list = userService.list();
         System.out.println(list);
+    }
+
+    @Test
+    public void test() {
+        List<UserEntity> userEntities = userService.listByIds(Lists.newArrayList());
+
+        System.out.println(userEntities);
     }
 }
