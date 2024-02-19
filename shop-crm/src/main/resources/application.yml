@@ -1,0 +1,44 @@
+server:
+  port: 18400
+
+spring:
+  application:
+    name: shop-crm
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.124.150:8848
+        group: DEVELOP_GROUP
+        namespace: db78713f-1844-4ba9-ae48-bc1a726dd2d9
+      config:
+        server-addr: 192.168.124.150:8848
+        group: DEVELOP_GROUP
+        namespace: db78713f-1844-4ba9-ae48-bc1a726dd2d9
+  config:
+    import:
+      - optional:nacos:im-crm.yml?group=DEVELOP_GROUP&refreshEnabled=true
+
+
+  datasource:
+    url: jdbc:mysql://192.168.124.150:3306/shop_crm?useSSL=false&characterEncoding=utf8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 192.168.124.150
+    port: 6379
+    password: redis@scnu
+  data:
+    mongodb:
+      host: 192.168.124.150
+      port: 27017
+      database: test
+      username: admin
+      password: admin
+      authentication-database: admin
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"

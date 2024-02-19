@@ -14,4 +14,6 @@ public interface CustomerRelationService extends IService<CustomerRelationEntity
     List<String> findUpCustomerIds(String userId);
 
     void remove(String downUserId, String upUserId);
+
+    List<String> getUpCustomerIdList(String userId);
 }

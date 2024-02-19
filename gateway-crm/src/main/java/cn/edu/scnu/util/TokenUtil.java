@@ -10,11 +10,11 @@ public class TokenUtil {
     /**
      * token 过期时间
      */
-    private static final long TOKEN_EXPIRE_TIME = TimeUnit.MILLISECONDS.convert(20, TimeUnit.MINUTES);
+    private static final long TOKEN_EXPIRE_TIME = TimeUnit.MILLISECONDS.convert(21, TimeUnit.MINUTES);
     /**
      * refresh_token 过期时间
      */
-    public static final long REFRESH_TOKEN_EXPIRE_TIME = TimeUnit.MILLISECONDS.convert(10, TimeUnit.DAYS);
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = TimeUnit.MILLISECONDS.convert(11, TimeUnit.DAYS);
     /**
      * token 签名秘钥
      */

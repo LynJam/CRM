@@ -24,6 +24,10 @@ spring:
           uri: lb://user-crm
           predicates:
             - Path=/user/**,/account/**,/customer/**
+        - id: router-shop-crm
+          uri: lb://shop-crm
+          predicates:
+            - Path=/product/**,/order/**,/stock/**
   config:
     import:
       - optional:nacos:gateway.yml?group=DEVELOP_GROUP&refreshEnabled=true

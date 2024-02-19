@@ -14,9 +14,9 @@ public class CustomerRelationServiceImpl extends ServiceImpl<CustomerRelationMap
     public Boolean havenAddUpUser(String downUserId, String upUserId) {
         LambdaQueryWrapper<CustomerRelationEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(CustomerRelationEntity::getUpUserId, upUserId)
-            .eq(CustomerRelationEntity::getDownUserId, downUserId).last("limit 1");
+            .eq(CustomerRelationEntity::getDownUserId, downUserId)
+            .last("limit 1");
         return this.getOne(queryWrapper) != null;
-
     }
 
     @Override
@@ -57,5 +57,16 @@ public class CustomerRelationServiceImpl extends ServiceImpl<CustomerRelationMap
 
         // TODO 2021/4/25 删除客户关系后，需要通知申请者, 解散房间
         this.remove(queryWrapper);
+    }
+
+    @Override
+    public List<String> getUpCustomerIdList(String userId) {
+        LambdaQueryWrapper<CustomerRelationEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(CustomerRelationEntity::getDownUserId, userId);
+        return this.list(queryWrapper)
+            .stream()
+            .map(CustomerRelationEntity::getUpUserId)
+            .distinct()
+            .collect(java.util.stream.Collectors.toList());
     }
 }

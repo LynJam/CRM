@@ -13,6 +13,7 @@
     <module>gateway-crm</module>
     <module>common-crm</module>
     <module>user-crm</module>
+    <module>shop-crm</module>
   </modules>
 
   <properties>
