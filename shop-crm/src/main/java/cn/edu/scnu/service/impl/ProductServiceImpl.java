@@ -1,12 +1,14 @@
 package cn.edu.scnu.service.impl;
 
 import cn.edu.scnu.constants.RedisKeyPrefix;
+import cn.edu.scnu.entity.OrderItemEntity;
 import cn.edu.scnu.entity.ProductEntity;
 import cn.edu.scnu.mapper.ProductMapper;
 import cn.edu.scnu.proxy.CustomerProxy;
 import cn.edu.scnu.service.ProductService;
 import cn.edu.scnu.service.StockService;
 import cn.edu.scnu.util.JsonUtil;
+import cn.edu.scnu.vo.OrderVo;
 import cn.edu.scnu.vo.ProductCartVo;
 import cn.edu.scnu.vo.ProductVo;
 import cn.hutool.core.bean.BeanUtil;
@@ -14,11 +16,13 @@ import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,5 +111,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductEntity
     public void saveProductCart(String userId, List<ProductCartVo> productCartVos) {
         String json = JsonUtil.toJson(productCartVos);
         redisTemplate.opsForValue().set(RedisKeyPrefix.PRODUCT_CART + userId, json);
+    }
+
+    @Override
+    public void delProductCart(String userId) {
+        redisTemplate.delete(RedisKeyPrefix.PRODUCT_CART + userId);
+    }
+
+    private ProductEntity getProductEntity(String productId) {
+        LambdaQueryWrapper<ProductEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ProductEntity::getProductId, productId);
+        ProductEntity productEntity = productMapper.selectOne(queryWrapper);
+        return productEntity;
     }
 }

@@ -10,7 +10,7 @@ public class OrderItemEntity {
     @TableId
     private Integer id;
     private String orderId;
-    private Integer productId;
+    private String productId;
     private String productName;
     private String productImage;
     private Double productPrice;

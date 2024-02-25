@@ -1,7 +1,9 @@
 package cn.edu.scnu.controller;
 
 import cn.edu.scnu.dto.RespRes;
+import cn.edu.scnu.entity.OrderEntity;
 import cn.edu.scnu.service.ProductService;
+import cn.edu.scnu.vo.OrderVo;
 import cn.edu.scnu.vo.ProductCartVo;
 import cn.edu.scnu.vo.ProductVo;
 import java.util.List;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

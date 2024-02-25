@@ -1,16 +1,13 @@
-package cn.edu.scnu.entity;
+package cn.edu.scnu.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import cn.edu.scnu.entity.OrderItemEntity;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 @Data
-@TableName(value = "order")
-public class OrderEntity {
-    @TableId
-    private Integer id;
-
+public class OrderVo {
+    private String token; // 接口幂等性
     private String orderId;
     private String sellerId;
     private String buyerId;
@@ -20,16 +17,13 @@ public class OrderEntity {
      * 订单状态【0->待付款；1->待发货；2->已发货；3->已完成；4->已关闭；5->无效订单】
      */
     private Byte status;
-
     private String receiverName;
     private String receiverPhone;
     private String receiverAddr;
-
     private Date paymentTime;
     private Date deliveryTime;
     private Date receiveTime;
-
     private Byte confirmStatus;
     private Byte deleteStatus;
-
+    List<OrderItemEntity> orderItems;
 }

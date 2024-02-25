@@ -1,6 +1,8 @@
 package cn.edu.scnu.service;
 
+import cn.edu.scnu.entity.OrderEntity;
 import cn.edu.scnu.entity.ProductEntity;
+import cn.edu.scnu.vo.OrderVo;
 import cn.edu.scnu.vo.ProductCartVo;
 import cn.edu.scnu.vo.ProductVo;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -20,4 +22,7 @@ public interface ProductService extends IService<ProductEntity> {
     List<ProductCartVo> getProductCart(String userId);
 
     void saveProductCart(String userId, List<ProductCartVo> productCartVos);
+
+    void delProductCart(String userId);
+
 }

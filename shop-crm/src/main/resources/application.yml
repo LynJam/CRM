@@ -36,6 +36,17 @@ spring:
       username: admin
       password: admin
       authentication-database: admin
+  rabbitmq:
+    host: 192.168.124.150
+    port: 5672
+    virtual-host: /
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+    listener:
+      direct:
+        acknowledge-mode: manual
 
 #management:
 #  endpoints:

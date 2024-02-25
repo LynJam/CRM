@@ -22,7 +22,7 @@ public enum ErrorEnum {
     //NO_CHANGE_PERMITS(10010, "权限不足，无法修改"),
     //NO_ADD_PERMITS(10010, "权限不足，增加信息失败"),
     //CANNOT_FOUND(10020, "查不到该数据"),
-    //HAS_EXISTED(10030, "该条记录已存在")
+    HAS_EXISTED(50030, "该条记录已存在"),
 
     UNKNOWN_EXCEPT(11111, "未知异常")
     ;
