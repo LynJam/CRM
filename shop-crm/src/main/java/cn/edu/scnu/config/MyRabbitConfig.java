@@ -54,6 +54,7 @@ public class MyRabbitConfig {
          */
         //设置确认回调
         rabbitTemplate.setConfirmCallback((correlationData,ack,cause) -> {
+            // 服务器收到了。。。
             System.out.println("confirm...correlationData["+correlationData+"]==>ack:["+ack+"]==>cause:["+cause+"]");
         });
 
@@ -67,6 +68,7 @@ public class MyRabbitConfig {
          * routingKey：当时这个消息用哪个路邮键
          */
         rabbitTemplate.setReturnCallback((message,replyCode,replyText,exchange,routingKey) -> {
+            // TODO 修改数据库当前消息的状态为失败状态。定期重发
             System.out.println("Fail Message["+message+"]==>replyCode["+replyCode+"]" +
                     "==>replyText["+replyText+"]==>exchange["+exchange+"]==>routingKey["+routingKey+"]");
         });

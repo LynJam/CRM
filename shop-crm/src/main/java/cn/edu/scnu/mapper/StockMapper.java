@@ -11,12 +11,12 @@ public interface StockMapper extends BaseMapper<StockEntity> {
     /**
      * 锁定库存
      */
-    @Update("update stock set lock_stock = lock_stock + #{num} where product_id = #{product_id} and stock - lock_stock >= #{num}")
+    @Update("update stock set locked_num = locked_num + #{num} where product_id = #{product_id} and stock_num - locked_num >= #{num}")
     Long lockSkuStock(@Param("product_id") String product_id,  @Param("num") Integer num);
 
     /**
      * 解锁库存
      */
-    @Update("update stock set lock_stock = lock_stock - #{num} where product_id = #{product_id}")
+    @Update("update stock set locked_num = locked_num - #{num} where product_id = #{product_id}")
     void unlockStock(@Param("product_id") String product_id,  @Param("num") Integer num);
 }

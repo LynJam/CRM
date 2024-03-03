@@ -5,6 +5,7 @@ import cn.edu.scnu.entity.OrderItemEntity;
 import cn.edu.scnu.entity.StockEntity;
 import cn.edu.scnu.entity.StockTaskDetailEntity;
 import cn.edu.scnu.entity.StockTaskEntity;
+import cn.edu.scnu.mapper.OrderMapper;
 import cn.edu.scnu.mapper.StockMapper;
 import cn.edu.scnu.mapper.StockTaskDetailMapper;
 import cn.edu.scnu.mapper.StockTaskMapper;
@@ -32,7 +33,7 @@ public class StockServiceImpl extends ServiceImpl<StockMapper, StockEntity> impl
     @Autowired
     private StockMapper stockMapper;
     @Autowired
-    private OrderService orderService;
+    private OrderMapper orderMapper;
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -115,7 +116,7 @@ public class StockServiceImpl extends ServiceImpl<StockMapper, StockEntity> impl
             return;
         }
         // TODO 查询订单状态
-        OrderEntity order = orderService.getOne(new LambdaQueryWrapper<OrderEntity>().eq(OrderEntity::getOrderId, orderId));
+        OrderEntity order = orderMapper.selectOne(new LambdaQueryWrapper<OrderEntity>().eq(OrderEntity::getOrderId, orderId));
         if (order == null || order.getStatus() == 4) {
             unlockStock(taskId, stockDetail);
         }

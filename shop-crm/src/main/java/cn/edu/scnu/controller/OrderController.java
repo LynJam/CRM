@@ -2,21 +2,21 @@ package cn.edu.scnu.controller;
 
 import cn.edu.scnu.constants.RedisKeyPrefix;
 import cn.edu.scnu.dto.RespRes;
-import cn.edu.scnu.entity.OrderEntity;
 import cn.edu.scnu.enums.ErrorEnum;
+import cn.edu.scnu.enums.OrderStatusEnum;
+import cn.edu.scnu.exception.BizException;
 import cn.edu.scnu.service.OrderService;
 import cn.edu.scnu.util.JsonUtil;
 import cn.edu.scnu.vo.OrderChangeStatusVo;
 import cn.edu.scnu.vo.OrderVo;
 import cn.edu.scnu.vo.ProductCartVo;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,8 +48,7 @@ public class OrderController {
     @PostMapping("/submitOrder")
     public RespRes<String> submitOrder(@RequestBody OrderVo orderVo, @RequestHeader("userId") String userId) {
         String token = orderVo.getToken();
-
-        Long executeRes = redisTemplate.execute(new DefaultRedisScript<Long>(COMPARE_AND_DEL_SCRIPT), Lists.newArrayList(RedisKeyPrefix.ORDER_TOKEN + userId), token);
+        Long executeRes = redisTemplate.execute(RedisScript.of(COMPARE_AND_DEL_SCRIPT, Long.class), Lists.newArrayList(RedisKeyPrefix.ORDER_TOKEN + userId), token);
         if (executeRes == 1L) {
             // token 验证成功
             log.info(JsonUtil.toJson(orderVo));
@@ -71,16 +70,18 @@ public class OrderController {
 
     @PostMapping("/changeStatus")
     public RespRes<String> changeStatus(@RequestBody OrderChangeStatusVo statusVo) {
-        LambdaQueryWrapper<OrderEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(OrderEntity::getOrderId, statusVo.getOrderId());
-
-        OrderEntity update = new OrderEntity();
-        update.setStatus(statusVo.getStatus());
-        boolean success = orderService.update(update, lambdaQueryWrapper);
-        if (success) {
-            return RespRes.success("ok");
+        Byte status = statusVo.getStatus();
+        if(OrderStatusEnum.PAYED.getCode() == status) {
+            orderService.payOrder(statusVo.getOrderId());
+        } else if(OrderStatusEnum.SENDED.getCode() == status) {
+            orderService.sendOrder(statusVo.getOrderId());
+        } else if(OrderStatusEnum.RECIEVED.getCode() == status) {
+            orderService.receivedOrder(statusVo.getOrderId());
+        } else if(OrderStatusEnum.CANCLED.getCode() == status) {
+            orderService.canceledOrder(statusVo.getOrderId());
         } else {
-            return RespRes.error(ErrorEnum.BUSH_EXCEPT);
+            throw new BizException("非法状态");
         }
+        return RespRes.success("ok");
     }
 }

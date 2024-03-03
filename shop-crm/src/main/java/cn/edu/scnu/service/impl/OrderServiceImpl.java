@@ -18,14 +18,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity> implements OrderService {
     @Autowired
@@ -66,7 +69,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity> impl
 
         orderVo.setOrderItems(orderItems);
         orderVo.setBuyerId(userId);
-        orderVo.setPayAmount(totalAmountAtom.get());
+        orderVo.setTotalAmount(totalAmountAtom.get());
         return orderVo;
     }
 
@@ -82,6 +85,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity> impl
         OrderEntity orderEntity = new OrderEntity();
         BeanUtils.copyProperties(orderVo, orderEntity);
         orderEntity.setStatus((byte) 0);
+        log.info("orderEntity:{}", orderEntity);
         save(orderEntity); // 保存订单
         List<OrderItemEntity> orderItems = orderVo.getOrderItems();
         orderItemMapper.batchInsert(orderItems);
@@ -117,6 +121,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity> impl
         }
         orderEntities.forEach(order -> {
             OrderVo orderVo = new OrderVo();
+            BeanUtils.copyProperties(order, orderVo);
             LambdaQueryWrapper<OrderItemEntity> itemQueryWrapper = new LambdaQueryWrapper<>();
             itemQueryWrapper.eq(OrderItemEntity::getOrderId, order.getOrderId());
             List<OrderItemEntity> orderItems = orderItemMapper.selectList(itemQueryWrapper);
@@ -147,5 +152,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderEntity> impl
                 //TODO 定期扫描数据库，重新发送失败的消息
             }
         }
+    }
+
+    @Override
+    public void payOrder(String orderId) {
+        OrderEntity order = getOne(new QueryWrapper<OrderEntity>().eq("order_id", orderId));
+        OrderEntity update = new OrderEntity();
+        update.setStatus(OrderStatusEnum.PAYED.getCode());
+        update.setPayAmount(order.getTotalAmount());
+        update.setPaymentTime(new Date());
+        update(update, new QueryWrapper<OrderEntity>().eq("order_id", orderId));
+    }
+
+    @Override
+    public void sendOrder(String orderId) {
+        OrderEntity update = new OrderEntity();
+        update.setStatus(OrderStatusEnum.SENDED.getCode());
+        update.setDeliveryTime(new Date());
+        update(update, new QueryWrapper<OrderEntity>().eq("order_id", orderId));
+    }
+
+    @Override
+    public void receivedOrder(String orderId) {
+        OrderEntity update = new OrderEntity();
+        update.setStatus(OrderStatusEnum.RECIEVED.getCode());
+        update.setReceiveTime(new Date());
+        update(update, new QueryWrapper<OrderEntity>().eq("order_id", orderId));
+    }
+
+    @Override
+    public void canceledOrder(String orderId) {
+        OrderEntity update = new OrderEntity();
+        update.setStatus(OrderStatusEnum.CANCLED.getCode());
+        update(update, new QueryWrapper<OrderEntity>().eq("order_id", orderId));
     }
 }
